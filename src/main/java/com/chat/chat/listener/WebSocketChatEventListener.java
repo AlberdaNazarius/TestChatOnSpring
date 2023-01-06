@@ -1,6 +1,9 @@
 package com.chat.chat.listener;
 
-import com.chat.chat.domain.WebSocketChatMessage;
+import com.chat.chat.MessageType;
+import com.chat.chat.model.WebSocketChatMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -11,12 +14,15 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Component
 public class WebSocketChatEventListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketChatEventListener.class);
+
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-        System.out.println("Received a new web socket connection");
+        logger.info("Received a new web socket connection");
     }
 
     @EventListener
@@ -25,7 +31,7 @@ public class WebSocketChatEventListener {
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if(username != null) {
             WebSocketChatMessage chatMessage = new WebSocketChatMessage();
-            chatMessage.setType("Leave");
+            chatMessage.setSender(MessageType.LEAVE.toString());
             chatMessage.setSender(username);
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }
