@@ -34,10 +34,11 @@ function connect(event) {
 
 function onConnected() {
     // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/groupChat/aa', onMessageReceived);
+    var id = document.querySelector('#name').value.trim()
+    stompClient.subscribe("/topic/groupChat/" + id + "/messages", onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/groupChat/aa/addUser",
+    stompClient.send("/app/groupChat/" + id + "/addUser",
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
@@ -60,7 +61,7 @@ function sendMessage(event) {
             content: messageInput.value,
             type: 'CHAT'
         };
-        stompClient.send("/app/groupChat/aa/sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send("/app/groupChat/" + document.querySelector('#name').value.trim() + "/sendMessage", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();

@@ -1,13 +1,15 @@
 package com.chat.chat.model;
 
 import com.chat.chat.MessageType;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ChatMessage {
+public class GroupChatMessage {
     String sender;
     String content;
     String date;

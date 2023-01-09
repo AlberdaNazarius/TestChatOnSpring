@@ -1,8 +1,7 @@
 package com.chat.chat.listener;
 
 import com.chat.chat.MessageType;
-import com.chat.chat.controller.GroupChatWsController;
-import com.chat.chat.model.ChatMessage;
+import com.chat.chat.model.GroupChatMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +30,12 @@ public class WebSocketChatEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if(username != null) {
-            ChatMessage chatMessage = new ChatMessage();
+            GroupChatMessage chatMessage = new GroupChatMessage();
             chatMessage.setType(MessageType.LEAVE);
             chatMessage.setSender(username);
             // TODO Somehow ged groupChat id
-            messagingTemplate.convertAndSend(GroupChatWsController.GROUP_CHAT, chatMessage);
+            messagingTemplate.convertAndSend("/topic/groupChat/", chatMessage);
+
         }
     }
 }
